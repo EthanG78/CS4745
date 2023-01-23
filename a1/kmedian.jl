@@ -99,6 +99,17 @@ function partition!(a, acopy, lo, hi, ipivot)
     acopy[lo + 1:lo + sizeL] = a[lo + 1:lo + sizeL]
     acopy[lo + sizeL: hi] = reverse(a[lo + sizeL: hi])=#
 
+    #=
+        From assignment doc:
+        
+        The partition!() function partitions a into acopy by placing L at the beginning of the array
+        and H in reverse order at the end of the array. For example, if a=[3,7,4,2,5] and p is 4, then
+        acopy=[3,2,?,5,7], where the middle element of acopy is unused. Hint: it is useful to swap p with
+        the first element of a before partitioning into acopy in order to avoid having to skip p in the loop.
+    
+        Therefore I need to have the pivot be in the middle, not the start??
+    =#
+
     a[lo], a[ipivot] = a[ipivot], a[lo]
     acopy[lo], acopy[ipivot] = a[lo], a[ipivot]
     
