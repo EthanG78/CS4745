@@ -84,7 +84,9 @@ function kmedianrec!(a, acopy, lo, hi, k)
     ipivot = rand(lo:hi)
     p = a[ipivot]
     sizeL, idxH = partition!(a, acopy, lo, hi, ipivot)
-    if sizeL == k - 1 return p end
+    if sizeL == k - 1 
+        return p 
+    end
     # todo: 
     #   - Should I do lo + 1  here? 
     if sizeL >= k return kmedianrec!(acopy, a, lo + 1, lo + sizeL, k) end
@@ -92,6 +94,11 @@ function kmedianrec!(a, acopy, lo, hi, k)
 end
 
 function partition!(a, acopy, lo, hi, ipivot)
+    sizeL = partition!(a, ipivot, lo, hi)
+    acopy[lo] = a[lo]
+    acopy[lo + 1:lo + sizeL] = a[lo + 1:lo + sizeL]
+    acopy[lo + sizeL: hi] = reverse(a[lo + sizeL: hi])
+
     a[lo], a[ipivot] = a[ipivot], a[lo]
     acopy[lo], acopy[ipivot] = a[lo], a[ipivot]
     
@@ -103,7 +110,11 @@ function partition!(a, acopy, lo, hi, ipivot)
     #   - How can we find the index of H for this edge case?
     #   - This edge case only happens when lo + 1 > hi 
     #     so |L| = 1 and starting idx of |H| is ? hi?
-    if i > hi return j - lo, hi end
+    if i > hi
+        # @show i j lo hi
+        # acopy = a
+        return j - lo, hi 
+    end
 
     while true 
         while a[i] < p
@@ -117,9 +128,9 @@ function partition!(a, acopy, lo, hi, ipivot)
             if j <= lo break end
         end
         if i >= j break end
-        acopy[i],acopy[j] = a[j],a[i]
+        a[i], a[j] = a[j],a[i]
     end
-    return j - lo, j
+    return j - lo, j + 1
 end
 
 
