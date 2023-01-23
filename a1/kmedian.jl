@@ -94,10 +94,10 @@ function kmedianrec!(a, acopy, lo, hi, k)
 end
 
 function partition!(a, acopy, lo, hi, ipivot)
-    sizeL = partition!(a, ipivot, lo, hi)
+    #=sizeL = partition!(a, ipivot, lo, hi)
     acopy[lo] = a[lo]
     acopy[lo + 1:lo + sizeL] = a[lo + 1:lo + sizeL]
-    acopy[lo + sizeL: hi] = reverse(a[lo + sizeL: hi])
+    acopy[lo + sizeL: hi] = reverse(a[lo + sizeL: hi])=#
 
     a[lo], a[ipivot] = a[ipivot], a[lo]
     acopy[lo], acopy[ipivot] = a[lo], a[ipivot]
