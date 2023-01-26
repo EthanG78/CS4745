@@ -84,12 +84,9 @@ function kmedianrec!(a, acopy, lo, hi, k)
     ipivot = rand(lo:hi)
     p = a[ipivot]
     sizeL, idxH = partition!(a, acopy, lo, hi, ipivot)
-    if sizeL == k - 1 
-        return p 
-    end
-    # todo: 
-    #   - Should I do lo + 1  here? 
-    if sizeL >= k return kmedianrec!(acopy, a, lo + 1, lo + sizeL, k) end
+    # BROKEN
+    if sizeL == k - 1 return p end
+    if sizeL >= k return kmedianrec!(acopy, a, lo , lo + sizeL - 1, k) end
     return kmedianrec!(acopy, a, idxH, hi, k - sizeL - 1)
 end
 
@@ -111,7 +108,6 @@ function partition!(a, acopy, lo, hi, ipivot)
     =#
 
     a[lo], a[ipivot] = a[ipivot], a[lo]
-    acopy[lo], acopy[ipivot] = a[lo], a[ipivot]
     
     p = a[lo]
     i = lo + 1
@@ -141,6 +137,9 @@ function partition!(a, acopy, lo, hi, ipivot)
         if i >= j break end
         a[i], a[j] = a[j],a[i]
     end
+
+    acopy[lo], acopy[j] = acopy[j], p 
+
     return j - lo, j + 1
 end
 
