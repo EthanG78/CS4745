@@ -138,7 +138,8 @@ function partition!(a, acopy, lo, hi, ipivot)
         a[i], a[j] = a[j],a[i]
     end
 
-    acopy[lo], acopy[j] = acopy[j], p 
+    acopy[lo], acopy[j] = acopy[j], p
+    acopy[j + 1:hi] = reverse( acopy[j + 1:hi])
 
     return j - lo, j + 1
 end
