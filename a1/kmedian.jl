@@ -84,39 +84,19 @@ function kmedianrec!(a, acopy, lo, hi, k)
     ipivot = rand(lo:hi)
     p = a[ipivot]
     sizeL, idxH = partition!(a, acopy, lo, hi, ipivot)
-    # BROKEN
     if sizeL == k - 1 return p end
     if sizeL >= k return kmedianrec!(acopy, a, lo , lo + sizeL - 1, k) end
     return kmedianrec!(acopy, a, idxH, hi, k - sizeL - 1)
 end
 
 function partition!(a, acopy, lo, hi, ipivot)
-    #=
-        From assignment doc:
-        
-        The partition!() function partitions a into acopy by placing L at the beginning of the array
-        and H in reverse order at the end of the array. For example, if a=[3,7,4,2,5] and p is 4, then
-        acopy=[3,2,?,5,7], where the middle element of acopy is unused. Hint: it is useful to swap p with
-        the first element of a before partitioning into acopy in order to avoid having to skip p in the loop.
-    
-        Therefore I need to have the pivot be in the middle, not the start??
-    =#
-
     a[lo], a[ipivot] = a[ipivot], a[lo]
     
     p = a[lo]
     i = lo + 1
     j = hi
-
-    # todo:
-    #   - How can we find the index of H for this edge case?
-    #   - This edge case only happens when lo + 1 > hi 
-    #     so |L| = 1 and starting idx of |H| is ? hi?
-    if i > hi
-        # @show i j lo hi
-        # acopy = a
-        return j - lo, hi 
-    end
+    
+    if i > hi return j - lo, hi end
 
     while true 
         while a[i] < p
