@@ -50,3 +50,4 @@ Manifest.toml
 
 # Ignore assignment PDFs since they ar property of University.
 *.pdf
+*.zip
