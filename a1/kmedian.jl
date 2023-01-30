@@ -91,34 +91,22 @@ end
 
 function partition!(a, acopy, lo, hi, ipivot)
     a[lo], a[ipivot] = a[ipivot], a[lo]
-    
+
     p = a[lo]
-    i = lo + 1
+    i = lo
     j = hi
-    
-    if i > hi return j - lo, hi end
 
-    while true 
-        while a[i] < p
-            acopy[i] = a[i]
+    if lo + 1 > hi return hi - lo, hi end
+
+    for x in a[lo + 1:hi]
+        if x < p
+            acopy[i] = x
             i += 1
-            if i >= hi break end
-        end
-        while a[j] > p
-            acopy[j] = a[j]
+        else
+            acopy[j] = x
             j -= 1
-            if j <= lo break end
         end
-        if i >= j break end
-        a[i], a[j] = a[j],a[i]
     end
-
-    acopy[lo], acopy[j] = a[j], p
-    acopy[j + 1:hi] = reverse!(acopy[j + 1:hi])
 
     return j - lo, j + 1
 end
-
-
-
-
