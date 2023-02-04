@@ -4,8 +4,8 @@
     Class: CS4745
     Assignment: 2
 =#
-using Random
-function matmulpar_test(reps=1, matSize, method=matmulpar1!)
+using Random, LinearAlgebra, BenchmarkTools
+function matmulpar_test(matSize, reps=1, method=matmulpar1!)
     for i in 1:reps
         # Generate random sizes of random arrays
         m = rand(1:matSize)
@@ -20,6 +20,9 @@ function matmulpar_test(reps=1, matSize, method=matmulpar1!)
 
         # Array c is mxp
         c = zeros(Float64, m, p)
+
+        # debug
+        # @show a b c
 
         # Temporary, just testing
         method(c, a, b)
