@@ -18,7 +18,7 @@ function matmulpar1!(c, a, b)
     nothing
 end
 
-# TODO: BROKEN
+# TODO: Review cutoffs and base case
 # Fork-join matrix multiplication
 #   - Each matrix is an nxn matrix
 #   - Assume n is a power of two
@@ -47,6 +47,7 @@ function matmulpar2!(c, a, b, cutoff)
             c22 = c[m+1:n, m+1:n]
         end
 
+        #=
         matmulpar2!(c11, a11, b11, cutoff)
         matmulpar2!(c11, a12, b21, cutoff)
 
@@ -57,6 +58,27 @@ function matmulpar2!(c, a, b, cutoff)
         matmulpar2!(c21, a22, b21, cutoff)
 
         matmulpar2!(c22, a21, b12, cutoff)
+        matmulpar2!(c22, a22, b22, cutoff)
+        =#
+
+        t_c11 = @spawn matmulpar2!(c11, a11, b11, cutoff)
+
+        t_c12 = @spawn matmulpar2!(c12, a11, b12, cutoff)
+
+        t_c21 = @spawn matmulpar2!(c21, a21, b11, cutoff)
+
+        t_c22 = @spawn matmulpar2!(c22, a21, b12, cutoff)
+
+        wait(t_c11)
+        matmulpar2!(c11, a12, b21, cutoff)
+
+        wait(t_c12)
+        matmulpar2!(c12, a12, b22, cutoff)
+        
+        wait(t_c21)
+        matmulpar2!(c21, a22, b21, cutoff)
+
+        wait(t_c22)
         matmulpar2!(c22, a22, b22, cutoff)
     end
     nothing
