@@ -18,17 +18,17 @@ function matmulpar1!(c, a, b)
     nothing
 end
 
-# TODO: Review cutoffs and base case
+# TODO: output is garbage now
 # Fork-join matrix multiplication
 #   - Each matrix is an nxn matrix
 #   - Assume n is a power of two
 function matmulpar2!(c, a, b, cutoff)
-    if length(a) == 1 && length(b) == 1
+    n::Int = size(a, 1)
+    if n <= cutoff && n <= cutoff
         # Base case
-        @views c[1, 1] += a[1, 1] * b[1, 1]
+        @views c[1:n, 1:n] += a[1:n, 1:n] * b[1:n, 1:n]
     else
         # Divide a, b, and c into 4 sub arrays of size (n/2)x(n/2)
-        n::Int = size(a, 1)
         m::Int = floor(n / 2)
         @views begin
             a11 = a[1:m, 1:m]
