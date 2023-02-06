@@ -47,7 +47,17 @@ function matmulpar2!(c, a, b, cutoff)
             c22 = c[m+1:n, m+1:n]
         end
 
-        
+        matmulpar2!(c11, a11, b11, cutoff)
+        matmulpar2!(c11, a12, b21, cutoff)
+
+        matmulpar2!(c12, a11, b12, cutoff)
+        matmulpar2!(c12, a12, b22, cutoff)
+
+        matmulpar2!(c21, a21, b11, cutoff)
+        matmulpar2!(c21, a22, b21, cutoff)
+
+        matmulpar2!(c22, a21, b12, cutoff)
+        matmulpar2!(c22, a22, b22, cutoff)
     end
     nothing
 end
