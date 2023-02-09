@@ -24,7 +24,7 @@ end
 #   - Assume n is a power of two
 function matmulpar2!(c, a, b, cutoff)
     n::Int = size(a, 1)
-    if n <= cutoff && n <= cutoff
+    if n <= cutoff
         # Base case
         @views c[1:n, 1:n] += a[1:n, 1:n] * b[1:n, 1:n]
     else

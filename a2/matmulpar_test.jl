@@ -5,7 +5,7 @@
     Assignment: 2
 =#
 using Random, LinearAlgebra, BenchmarkTools
-function matmulpar_test(matSize, reps=1, method=matmulpar1!)
+function matmulpar1_test(matSize, reps=1)
     for i in 1:reps
         # Generate random sizes of random arrays
         m = rand(1:matSize)
@@ -25,7 +25,35 @@ function matmulpar_test(matSize, reps=1, method=matmulpar1!)
         # @show a b c
 
         # Temporary, just testing
-        method(c, a, b)
+        print("matmulpar1!: ")
+        @btime matmulpar1!($c, $a, $b)
+        
+        # Compute matrix product using Julia's implementation
+        cc = a * b
+
+        # Compare results
+        diff = norm((cc-c)./c)
+
+        print("Diff: $diff")
+    end
+end
+
+function matmulpar2_test(matSize, reps=1, cutoff=1)
+    for i in 1:reps
+        # Generate random sizes of random arrays
+        n = rand(1:matSize)
+
+        # Create random nxn arrays
+        a = rand(Float64, (n, n))
+        b = rand(Float64, (n, n))
+        c = zeros(Float64, n, n)
+
+        # debug
+        # @show a b c
+
+        # Temporary, just testing
+        print("matmulpar2!: ")
+        @btime matmulpar2!($c, $a, $b, $cutoff)
         
         # Compute matrix product using Julia's implementation
         cc = a * b
