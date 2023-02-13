@@ -18,7 +18,6 @@ function matmulpar1!(c, a, b)
     nothing
 end
 
-# TODO: output is garbage now
 # Fork-join matrix multiplication
 #   - Each matrix is an nxn matrix
 #   - Assume n is a power of two
@@ -48,6 +47,7 @@ function matmulpar2!(c, a, b, cutoff)
         end
 
         #=
+        # Sequential
         matmulpar2!(c11, a11, b11, cutoff)
         matmulpar2!(c11, a12, b21, cutoff)
 
@@ -61,6 +61,7 @@ function matmulpar2!(c, a, b, cutoff)
         matmulpar2!(c22, a22, b22, cutoff)
         =#
 
+        # Parallel
         t_c11 = @spawn matmulpar2!(c11, a11, b11, cutoff)
 
         t_c12 = @spawn matmulpar2!(c12, a11, b12, cutoff)

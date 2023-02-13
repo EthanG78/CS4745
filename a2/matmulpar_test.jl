@@ -24,7 +24,6 @@ function matmulpar1_test(matSize, reps=1)
         # debug
         # @show a b c
 
-        # Temporary, just testing
         print("matmulpar1!: ")
         @btime matmulpar1!($c, $a, $b)
         
