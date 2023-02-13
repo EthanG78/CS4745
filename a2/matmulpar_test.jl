@@ -37,7 +37,7 @@ function matmulpar1_test(matSize, reps=1)
     end
 end
 
-function matmulpar2_test(matSize, reps=1, cutoff=1)
+function matmulpar2_test(matSize, cutoff, reps=1)
     for i in 1:reps
         # Generate random sizes of random arrays
         n = rand(1:matSize)
