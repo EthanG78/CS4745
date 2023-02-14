@@ -42,7 +42,8 @@ function matmulpar2_test(matSize, cutoff, reps=1)
         @btime matmulpar2!($c, $a, $b, $cutoff)
 
         # Compute matrix product using Julia's implementation
-        cc = a * b
+        print("BLAS a*b: ")
+        @btime cc = a * b
 
         # Compare results
         diff = norm((cc - c) ./ c)
