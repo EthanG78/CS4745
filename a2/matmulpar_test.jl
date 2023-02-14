@@ -34,6 +34,7 @@ function matmulpar2_test(matSize, cutoff, reps=1)
         a = rand(Float64, (matSize, matSize))
         b = rand(Float64, (matSize, matSize))
         c = zeros(Float64, (matSize, matSize))
+        cc = zeros(Float64, (matSize, matSize))
 
         # debug
         # @show a b c
@@ -43,7 +44,7 @@ function matmulpar2_test(matSize, cutoff, reps=1)
 
         # Compute matrix product using Julia's implementation
         print("BLAS a*b: ")
-        @btime cc = $a * $b
+        @btime $cc = $a * $b
 
         # Compare results
         diff = norm((cc - c) ./ c)
