@@ -37,11 +37,11 @@ end
 
 # BROKEN
 function gpuscan_kernel(a_d, j, n)
-    id = (blockIdx().x - 1) * blockDim().x + threadIdx().x
-    id += 1
+    # id = (blockIdx().x - 1) * blockDim().x + 
+    id = threadIdx().x
     @cuprintln("id $id")
     if (id <= n)
         a_d[id] = a_d[id] + a_d[id-j]
     end
-    nothing
+    return nothing
 end
