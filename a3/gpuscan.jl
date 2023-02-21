@@ -14,7 +14,7 @@ function gpuscan_cuarray(a_d)
     n = length(a_d)
     j = 1
     @views @inbounds while j < n
-        a_d[1+j:n] .= a_d[1+j:n] + a_d[1:n - j]
+        a_d[1+j:n] .= a_d[1+j:n] .+ a_d[1:n - j]
         j = j << 1
     end
     synchronize()
@@ -27,7 +27,7 @@ function gpuscan_cunative(a_d)
     j = 1
     nThreads = MAX_THREADS_PER_BLOCK
     nblocks = cld(n, nThreads)
-    while j < n
+    @views @inbounds while j < n
         @cuda blocks=nblocks threads=nThreads gpuscan_kernel(a_d, j, n)
         j = j << 1
     end
@@ -35,9 +35,13 @@ function gpuscan_cunative(a_d)
     return a_d
 end
 
+# BROKEN
 function gpuscan_kernel(a_d, j, n)
-    for i in 1+j:n
-        a_d[i] = a_d[i] + a_d[i-j]
+    id = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+    id += 1
+    @cuprintln("id $id")
+    if (id <= n)
+        a_d[id] = a_d[id] + a_d[id-j]
     end
     nothing
 end
