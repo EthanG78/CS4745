@@ -21,27 +21,25 @@ function gpuscan_cuarray(a_d)
     return a_d
 end
 
-# WIP:
 function gpuscan_cunative(a_d)
     n = length(a_d)
     j = 1
     nThreads = MAX_THREADS_PER_BLOCK
-    nblocks = cld(n, nThreads)
-    @views @inbounds while j < n
-        @cuda blocks=nblocks threads=nThreads gpuscan_kernel(a_d, j, n)
+    nBlocks = cld(n, nThreads)
+    # @show nThreads nBlocks
+    while j < n
+        @cuda blocks=nBlocks threads=nThreads gpuscan_kernel(a_d, j, n)
         j = j << 1
     end
     synchronize()
     return a_d
 end
 
-# BROKEN
 function gpuscan_kernel(a_d, j, n)
-    # id = (blockIdx().x - 1) * blockDim().x + 
-    id = threadIdx().x
-    @cuprintln("id $id")
-    if (id <= n)
-        a_d[id] = a_d[id] + a_d[id-j]
+    i = ((blockIdx().x - 1) * blockDim().x + threadIdx().x) + j
+    if (i <= n)
+        #@cuprintln("blockIdx $(blockIdx().x) blockDim $(blockDim().x) id $i")
+        a_d[i] = a_d[i] + a_d[i-j]
     end
     return nothing
 end
