@@ -36,8 +36,7 @@ function gpuscan_cunative(a_d)
 end
 
 function gpuscan_kernel(a_d, j, n)
-    i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
-    i += j + 1
+    i = ((blockIdx().x - 1) * blockDim().x + threadIdx().x) + j
     if (i <= n)
         #@cuprintln("blockIdx $(blockIdx().x) blockDim $(blockDim().x) id $i")
         a_d[i] = a_d[i] + a_d[i-j]
