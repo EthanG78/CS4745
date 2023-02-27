@@ -26,7 +26,7 @@ function gpuscan_cunative(a_d)
     j = 1
     nThreads = MAX_THREADS_PER_BLOCK
     nBlocks = cld(n, nThreads)
-    # @show nThreads nBlocks
+    @show nThreads nBlocks
     while j < n
         @cuda blocks=nBlocks threads=nThreads gpuscan_kernel(a_d, j, n)
         j = j << 1
