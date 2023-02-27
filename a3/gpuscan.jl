@@ -27,13 +27,12 @@ function gpuscan_cunative(a_d)
     j = 1
     nThreads = MAX_THREADS_PER_BLOCK
     nBlocks = cld(n, nThreads)
-    @show nThreads nBlocks
+    # @show nThreads nBlocks
     while j < n
         @cuda blocks=nBlocks threads=nThreads gpuscan_kernel(a_d, b_d, j, n)
         (a_d, b_d) = (b_d, a_d)
         j = j << 1
     end
-    #@cuda blocks=nBlocks threads=nThreads gpuscan_kernel_test(a_d, n)
     synchronize()
     return a_d
 end
@@ -49,16 +48,3 @@ function gpuscan_kernel(a_d, b_d, j, n)
     end
     return nothing
 end
-
-#=
-function gpuscan_kernel_test(a_d, n)
-    id = threadIdx().x
-    j = 1
-    @views @inbounds while j < n
-        a_d[id] += a_d[id-j]
-        sync_threads()
-        j = j << 1
-    end
-    return nothing
-end
-=#
