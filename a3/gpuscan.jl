@@ -40,6 +40,9 @@ end
 
 function gpuscan_kernel(a_d, b_d, j, n)
     i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
+    if (i <= j)
+        b_d[i] = a_d[i]
+    end
     i += j  # 1+j <= i <= n
     if (i <= n)
         b_d[i] = a_d[i] + a_d[i-j]
