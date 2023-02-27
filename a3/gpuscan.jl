@@ -22,13 +22,15 @@ function gpuscan_cuarray(a_d)
 end
 
 function gpuscan_cunative(a_d)
+    b_d = similar(a_d)
     n = length(a_d)
     j = 1
     nThreads = MAX_THREADS_PER_BLOCK
     nBlocks = cld(n, nThreads)
     @show nThreads nBlocks
     while j < n
-        @cuda blocks=nBlocks threads=nThreads gpuscan_kernel(a_d, j, n)
+        @cuda blocks=nBlocks threads=nThreads gpuscan_kernel(a_d, b_d, j, n)
+        (a_d, b_d) = (b_d, a_d)
         j = j << 1
     end
     #@cuda blocks=nBlocks threads=nThreads gpuscan_kernel_test(a_d, n)
@@ -36,11 +38,11 @@ function gpuscan_cunative(a_d)
     return a_d
 end
 
-function gpuscan_kernel(a_d, j, n)
+function gpuscan_kernel(a_d, b_d, j, n)
     i = (blockIdx().x - 1) * blockDim().x + threadIdx().x
     i += j  # 1+j <= i <= n
     if (i <= n)
-        a_d[i] += a_d[i-j]
+        b_d[i] = a_d[i] + a_d[i-j]
     end
     return nothing
 end
