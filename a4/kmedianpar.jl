@@ -31,9 +31,9 @@ function partition!(a, acopy, lo, hi, ipivot)
     if lo + 1 > hi return hi - lo, hi end
 
     # Populate the marker arrays
-    markerL = similar(lo+1:hi)
-    markerH = similar(lo+1:hi)
-    @threads for i in lo+1:hi
+    markerL = similar(lo:hi-1)
+    markerH = similar(lo:hi-1)
+    @threads for i in lo:hi-1
         if a[i] < p
             markerL[i] = 1
             markerH[i] = 0
@@ -46,12 +46,12 @@ function partition!(a, acopy, lo, hi, ipivot)
     pSumL = cumsum(markerL)
     pSumH = cumsum(markerH)
 
-    sizeL = max(pSumL)
+    sizeL = findmax(pSumL)
 
     # Use the prefix sums to properly place values
     # from a into acopy based on if they are in L or H
-    @threads for i in lo+1:hi
-        if markerL[i]
+    @threads for i in lo:hi-1
+        if markerL[i] == 1
             acopy[pSumL[i]] = a[i]
         else
             acopy[pSumH[sizeL + i]] = a[i]
