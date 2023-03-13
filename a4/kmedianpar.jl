@@ -7,9 +7,7 @@
 using Base.Threads
 
 function kmedianpar(ain, k)
-    if k > lastindex(ain)
-        return -1
-    end
+    if k > lastindex(ain) return -1 end
     a = copy(ain)
     acopy = similar(a)
     return kmedianrec!(a, acopy, 1, length(a), k)
@@ -30,18 +28,19 @@ function partition!(a, acopy, lo, hi, ipivot)
 
     p = a[lo]
 
-    if lo + 1 > hi return 1 end
+    if lo + 1 > hi return hi - lo end
 
     # Populate the marker arrays
     markerL = similar(lo+1:hi)
     markerH = similar(lo+1:hi)
-    @threads for i in lo+1:hi
-        if a[i] < p
-            markerL[i-1] = 1
-            markerH[i-1] = 0
+
+    @threads for i in eachindex(markerL)
+        if a[lo+i] < p
+            markerL[i] = 1
+            markerH[i] = 0
         else
-            markerL[i-1] = 0
-            markerH[i-1] = 1
+            markerL[i] = 0
+            markerH[i] = 1
         end
     end
 
@@ -56,11 +55,11 @@ function partition!(a, acopy, lo, hi, ipivot)
 
     # Use the prefix sums to properly place values
     # from a into acopy based on if they are in L or H
-    @threads for i in lo+1:hi
-        if markerL[i-1] == 1
-            acopy[pSumL[i-1]] = a[i]
+    @threads for i in eachindex(markerL)
+        if markerL[i] == 1
+            acopy[pSumL[i]] = a[lo+i]
         else
-            acopy[sizeL+pSumH[i-1]] = a[i]
+            acopy[sizeL+pSumH[i]] = a[lo+i]
         end
     end
 
