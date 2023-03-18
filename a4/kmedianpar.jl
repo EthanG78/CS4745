@@ -22,7 +22,6 @@ function kmedianrec!(a, acopy, lo, hi, k)
     return kmedianrec!(acopy, a, lo + sizeL, hi - 1, k - sizeL - 1)
 end
 
-# BROKEN
 function partition!(a, acopy, lo, hi, ipivot)
     a[lo], a[ipivot] = a[ipivot], a[lo]
 
@@ -57,9 +56,9 @@ function partition!(a, acopy, lo, hi, ipivot)
     # from a into acopy based on if they are in L or H
     @threads for i in eachindex(markerL)
         if markerL[i] == 1
-            acopy[pSumL[i]] = a[lo+i]
+            acopy[lo-1+pSumL[i]] = a[lo+i]
         else
-            acopy[sizeL+pSumH[i]] = a[lo+i]
+            acopy[lo-1+sizeL+pSumH[i]] = a[lo+i]
         end
     end
 
