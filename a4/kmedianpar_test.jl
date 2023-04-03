@@ -26,6 +26,6 @@ function kmedian_time(n, reps=1)
         k = rand(1:n)
         print("k=$k\n")
         print("kmedianpar: ")
-        @btime kmedian3($a,$k)
+        @btime kmedianpar($a,$k)
     end
 end
