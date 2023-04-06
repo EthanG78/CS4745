@@ -75,8 +75,5 @@ function partition!(a, acopy, lo, hi, ipivot)
         end
     end
 
-    # debug
-    # @show a, acopy, markerL, markerH, pSumH, pSumL, sizeL
-
     return sizeL
 end
